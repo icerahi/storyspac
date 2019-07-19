@@ -1,0 +1,248 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+     
+{% block style %}
+ <link rel="stylesheet" href="{% static 'photos/style.css' %}">
+
+{% endblock style %}
+
+
+
+
+
+{% for object in object_list %}
+
+<div class="col">
+
+<div class="all_content">
+
+
+
+  <div class="left_side"> <!--cilo col-md-8-->
+
+    <div class="img-container">
+        <div id="upload-div"></div>
+        <div class="img-div">
+          <div class="header">
+
+            <div class="pro_img img-fluid">
+              <img src="{{ object.user.profile.profile_pic.url }}" width="30" height="50" alt="">
+            </div>
+
+            <div class="pro_name">
+              <div class="p_name">
+                  <a href="{% url 'profile:userdetail' username=object.user.username %}"><i><b>{{ object.user.username }}</b></i></a>
+
+                <br/>
+
+                <small class="text-muted">{{ object.timestamp|timesince}}</small>
+              </div>
+
+              <div class="date">
+                
+              </div>
+               
+            </div>
+
+
+          
+
+       </div>
+            <a href="{{ object.get_absolute_url }}"><img src="{{ object.image.url }}" alt=""></a>
+             
+            <br>views: {{object.views}}
+  <b><i>{{ object.user }}</i></b>|{{ object.caption }}
+  </div>
+
+<div class="icon">
+    <i class="fa fa-heart-o" aria-hidden="true"></i>
+
+    <i class="fa fa-comment-o" aria-hidden="true"></i>
+
+<!-popover start-->
+
+
+
+
+
+        <button height="30" width="30" data-toggle="modal" data-target="#share{{object.id}}" type="text">
+             <i class="fa fa-share-square-o" width='20' height='20' aria-hidden="true"></i>
+        </button>
+
+
+
+
+
+
+      <!-- Modal -->
+            <div class="modal fade" id="share{{object.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Share With</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                       <a href='//pinterest.com/pin/create/button/?url=http://127.0.0.1:8000/{{object.get_absolute_url }}&media=https://127.0.0.1/{{object.get_absolute_url }}&description={{object.caption}}'>
+<img height='40' width='50' src="{% static 'img/pinterest.png' %}" alt='pinterest' ></a>
+<a href='//twitter.com/home?status=http://127.0.0.1:8000/{{object.get_absolute_url }}'>
+<img height='40' width='50' src="{% static 'img/twitter.jpg' %}" alt='twitter'></a>
+ <a href='//www.linkedin.com/shareArticle?mini=true&url=http://127.0.0.1:8000/{{object.get_absolute_url}}&title=&summary=&source='>
+<img height='40' width='50' src="{% static 'img/linkedin.png' %}" alt='linkedin'></a>
+                   <a href='//www.facebook.com/sharer/sharer.php?u=http://127.0.0.1:8000/{{object.get_absolute_url}}'>
+    <img height='40' width='60' src="{% static 'img/facebook.jpg' %}" alt='facebook'></a>
+
+
+
+  </div>
+
+    </div>
+
+                </div>
+              </div>
+    </div>
+
+
+
+
+
+  </div>
+
+          <div class="comment">
+            <input type="text" id="" name="" placeholder="Comment">
+        </div>
+
+
+
+  </div> <!----col-md-8 end---->
+
+    </div>
+</div>
+
+{% empty %}
+Please Follow <a href="/people">People</a> to see Their Photo
+{% endfor %}
+
+
+<div col-md-4>
+
+<div class="right_side"> <!--cilo col-md-4-->
+               <div class="user_area" id="">
+                    <div class="user_details">
+                        <div class="user_img">
+                            <img src="{{ request.user.profile.profile_pic.url }}" width="70" height="70" alt="">
+                        </div>
+                        <div class="user_name">
+                            <p class="name">
+                                {{ request.user }}
+                            </p>
+                            <p class="id">
+                                {{ request.user.email }}
+                            </p>
+                        </div> <!--user_name-->
+
+                    </div> <!--user_details-->
+
+                    <div class="friends_suggestion">
+
+                       <div class="suggest_you">
+                           <p class="for_you">Suggestion for you</p>
+                           <p class="see"><a href="#">See all</a></p>
+                       </div>
+{% for user in recommended %}
+
+                       <div class="suggest_friend">
+                           <div class="details_friend">
+
+                                <div class="img">
+                                   <img src="{{ user.user.profile.profile_pic.url }}" width="50" height="50" alt="">
+                               </div>
+
+                               <div class="de_name">
+
+                                   <p class="name">
+                                   {{ user.user.username }}</p>
+
+
+                                   <p class="source">
+                                       {% if user.followed_by %}
+                                  followed by {{ user.followed_by.last }}
+                                   {% else%}
+                                       no follower
+                                       {% endif %}
+                                   </p>
+
+
+                               </div>
+
+                           </div>
+
+                           <div class="follow">
+                                <a href="{% url 'profile:userdetail' username=user.user.username %}">see</a>
+                           </div>
+
+
+                       </div> <!---suggest_friend end---->
+{% endfor %}
+
+
+
+
+
+                    </div> <!---friends_suggestion end---->
+
+
+
+                </div>
+            </div> <!---col-md-4 end---->
+
+            </div><!---col-md-4 end---->
+
+</div>
+
+
+
+
+
+
+
+
+
+{% block script %} 
+<script type="text/javascript" src="{% static 'photos/js/jquery.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'photos/js/jquery.sticky.js' %}"></script>
+<!--popover start ---->
+
+ <script>
+    $(function () {
+  $('[data-toggle="popover"]').popover({
+    container: 'body'
+  })
+})
+
+</script>
+
+
+<script>
+    $(document).ready(function(){
+      $("#kiuna").sticky({topSpacing:200});
+    });
+  </script>
+{% endblock script%}
+
+<script>
+  var infinite = new Waypoint.Infinite({
+    element: $('.infinite-container')[0]
+  });
+</script>
+
+
+
+{% endblock content %}
+
+

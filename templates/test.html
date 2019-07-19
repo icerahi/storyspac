@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+
+      <div class="row edit-profile-wrapper">
+
+  <div class="col-sm-9 right-col">
+    <form class="edit_user" id="edit_user" action="/" accept-charset="UTF-8" method="post"><input name="utf8" type="hidden" value="&#x2713;" /><input type="hidden" name="_method" value="put" /><input type="hidden" name="authenticity_token" value="lzGr2FeQt+xIqWFxXr1LmFSZ2MM37cSsrbHN7/t6hnAw0kq0H67pWELPiwC16d+vjVKa7DERp+uyw52JTaSMzA==" />
+
+
+      <div class="row username-img">
+        <div class="col-sm-3 text-right">
+          <img width="38" height="38" class="round-img" src="https://www.gravatar.com/avatar/e1ec04c343f4507d76c70cfb25f7b4bf.jpg" alt="E1ec04c343f4507d76c70cfb25f7b4bf" />
+        </div>
+        <div class="col-sm-9">
+          <p>rahi_chowdory</p>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-sm-3 col-form-label text-right font-weight-bold" for="user_name">Name</label>
+        <div class="col-sm-9">
+          <input autofocus="autofocus" class="form-control col-sm-9" type="text" value="rahi_chowdory" name="user[name]" id="user_name" />
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-sm-3 col-form-label text-right font-weight-bold" for="user_website">Website</label>
+        <div class="col-sm-9">
+          <input class="form-control col-sm-9" type="text" name="user[website]" id="user_website" />
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-sm-3 col-form-label text-right font-weight-bold" for="user_bio">Bio</label>
+        <div class="col-sm-9">
+          <input class="form-control col-sm-9" type="text" name="user[bio]" id="user_bio" />
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-sm-3 col-form-label text-right font-weight-bold" for="user_email">Email</label>
+        <div class="col-sm-9">
+          <input class="form-control col-sm-9" type="email" value="zanjarwhite@gmail.com" name="user[email]" id="user_email" />
+        </div>
+      </div>
+
+
+      <div class="form-group row">
+        <label class="col-sm-3 col-form-label text-right font-weight-bold" for="user_password">Password</label>
+        <div class="col-sm-9">
+          <input autocomplete="off" class="form-control col-sm-9" placeholder="Leave blank if you don&#39;t want to change it" type="password" name="user[password]" id="user_password" />
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-sm-3 col-form-label text-right font-weight-bold" for="user_password_confirmation">Password confirmation</label>
+        <div class="col-sm-9">
+          <input autocomplete="off" class="form-control col-sm-9" type="password" name="user[password_confirmation]" id="user_password_confirmation" />
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-9">
+          <input type="submit" name="commit" value="Update" class="btn btn-primary" data-disable-with="Update" />
+        </div>
+      </div>
+</form>  </div>
+</div>
+
+</div>
+{% endblock %}

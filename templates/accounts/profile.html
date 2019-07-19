@@ -1,0 +1,384 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{% block style %}
+    <link rel="stylesheet" media="all" href="{% static 'accounts/profile.css' %}" data-turbolinks-track="reload" />
+
+	<link rel="stylesheet" type="text/css" href="{% static 'stikipy/css/pins.css' %}" />
+
+         <!-- main css -->
+        <link rel="stylesheet" href="{% static 'articles/style.css' %}">
+        <link rel="stylesheet" href="{% static 'articles/responsive.css' %}">
+
+{% endblock %}
+
+
+
+    <div class="container">
+      <div class="row justify-content-md-center profile-wrapper">
+  <div class="col-md-4 text-center">
+    <img width="140" height="140" class="round-img" src="{{ object.profile.profile_pic.url }}" alt="Loading profile pic" />
+
+  </div>
+
+
+  <div class="col-md-8">
+    <div class="row">
+
+      <p class="username">{{ object.username }}</p>
+
+        {% if  request.user  != object.profile.user %}
+
+        <a class="btn btn-outline-dark common-btn edit-profile-btn" href="{{ object.profile.get_follow_url }}">
+           {% if following %} UnFollow{% else %} Follow {% endif %}
+        </a>
+        {% else %}
+
+        <a class="btn btn-outline-dark common-btn edit-profile-btn" href="{% url 'profile:profile_edit' username=object.username %}">Edit Profile</a>
+         <br>&nbsp;&nbsp;
+        <input height="30" width="30" data-toggle="modal" data-target="#settings" type="image" src=" https://img.icons8.com/dusk/64/000000/wrench.png">
+
+        {% endif %}
+
+
+
+
+
+      <!-- Modal -->
+      <div class="modal fade" id="settings" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Settings</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="list-group text-center">
+                {% if object.has_usable_password %}
+              <a href="{% url 'change_password' %}" class="list-group-item list-group-item-action">Change Password</a>
+                {% else %}
+                <a href="{% url 'account_set_password' %}" class="list-group-item list-group-item-action">Set Password</a>
+                {% endif %}
+
+
+
+              <a class="list-group-item list-group-item-action" rel="nofollow" data-method="delete" href="{% url 'logout' %}">Log out</a>
+              <a href="#" class="list-group-item list-group-item-action" data-dismiss="modal">Cancel</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+    <button type="button" class="btn btn-outline-dark common-btn edit-profile-btn" data-toggle="modal" data-target="#follower">
+      Follower ({{ object.followed_by.all.count }})
+    </button>
+<button type="button" class="btn btn-outline-dark common-btn edit-profile-btn" data-toggle="modal" data-target="#following">
+      Following ({{ object.profile.get_following.count }})
+    </button>        <br>
+
+      <br><br>
+
+            <div class="row">
+            {% if object.profile.fullname %}
+          <p class="email">{{ object.profile.fullname }}</p>
+            {% endif %}
+
+                {% if object.profile.bio %}
+   <p><br> {{ object.profile.bio|safe }}</p>
+                {% endif %}
+                  </div>
+      <!-- follower modal -->
+            <!-- Modal -->
+            <div class="modal fade" id="follower" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Followers </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+{% for profile in object.followed_by.all %}
+ <div class="project">
+    <div class="row bg-white has-shadow">
+      <div class="left-col col-lg-6 d-flex align-items-center justify-content-between">
+        <div class="project-title d-flex align-items-center">
+          <div class="round-img"><img src="{{ profile.profile_pic.url }}" alt="..." class="round-img" width="30" height="30"></div>
+          <div class="text">
+              <a href="{% url 'profile:userdetail' username=profile.user.username %}">
+                  <p class="email" style="margin-bottom:2px;"> &nbsp;&nbsp; {{profile.user.username}}</p>
+                  </a>
+          </div>
+        </div>
+          <small>Follower: ({{profile.user.followed_by.all.count}})</small>
+       </div>
+                      <a class="btn btn-dark common-btn edit-profile-btn" href="{% url 'profile:userdetail' username=profile.user.username%}">
+                          see</a>
+
+      </div>
+    </div>
+    {% empty %}
+          Not following any one
+ {% endfor %}
+
+
+  </div>
+
+    </div>
+
+                </div>
+              </div>
+
+  <!-- following modal -->
+            <!-- Modal -->
+            <div class="modal fade" id="following" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Following </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+
+{% for user in object.profile.get_following %}
+ <div class="project">
+    <div class="row bg-white has-shadow">
+      <div class="left-col col-lg-6 d-flex align-items-center justify-content-between">
+        <div class="project-title d-flex align-items-center">
+          <div class="round-img"><img src="{{ user.profile.profile_pic.url }}" alt="..." class="round-img" width="30" height="30"></div>
+          <div class="text">
+              <a href="{% url 'profile:userdetail' username=user.username %}"><p class="email" style="margin-bottom:2px;"> &nbsp;&nbsp; {{user.username}}</p>
+                  </a>
+          </div>
+        </div>
+ <small>Follower: ({{user.followed_by.all.count}})</small>
+       </div>
+        <a class="btn btn-dark common-btn edit-profile-btn" href="{% url 'profile:userdetail' username=user.username %}">
+            see</a>
+
+      </div>
+    </div>
+    {% empty %}
+          Not following any one
+ {% endfor %}
+
+  </div>
+
+    </div>
+
+
+                </div>
+              </div>
+
+
+
+
+            </div>
+          {% if object.profile.date_of_birth %}
+           <p> <b>Date of Birth: {{ object.profile.date_of_birth }}</b></p>
+          {% endif %}
+              </div>
+
+
+
+
+  <div class="profile-tab">
+
+    <nav>
+      <div class="nav nav-tabs d-flex justify-content-center" id="nav-tab" role="tablist">
+		  <a class="nav-item nav-link" id="nav-stikipy-tab" data-toggle="tab" href="#nav-stikipy" role="tab" aria-controls="nav-stikipy" aria-selected="true">STIKIPY({{ object.stickypic_set.all.count}})</a>
+          <a class="nav-item nav-link active" id="nav-photo-tab" data-toggle="tab" href="#nav-photo" role="tab" aria-controls="nav-saved" aria-selected="false">PHOTO({{ object.photo_set.all.count }})</a>
+          <a class="nav-item nav-link" id="nav-article-tab" data-toggle="tab" href="#nav-article" role="tab" aria-controls="nav-article" aria-selected="false">ARTICLE({{ object.article_set.all.count}})</a>
+          <a class="nav-item nav-link" id="nav-favourite-tab" data-toggle="tab" href="#nav-favourite" role="tab" aria-controls="nav-favourite" aria-selected="false">FAVOURITE({{ object.favourite.all.count}})</a>
+
+
+	  </div>
+
+    </nav>
+
+    <div class="tab-content pb-3" id="nav-tabContent">
+
+		<!-- post tabber -->
+      <div class="tab-pane fade show active" id="nav-photo" role="tabpanel" aria-labelledby="nav-photo-tab">
+        <div class="row">
+
+            {% for photo in object.photo_set.all %}
+
+            <div class="col-4">
+    <a href="{{ photo.get_absolute_url }}">
+
+      <div class="post-stat d-flex justify-content-center align-items-center">
+        <span>
+          <i class="fa fa-heart" aria-hidden="true"></i>
+          {{ photo.liked.all.count }}
+          <i class="ml-3 fa fa-comment" aria-hidden="true"></i>
+         {{ photo.comment_photo.all.count }}
+        </span>
+      </div>
+      <img class="card-img-top image-preview" src="{{ photo.image.url }}" alt="{{ photo.caption }}" />
+</a>  </div>
+            {% empty %}
+            <p>No Photo yet!!</p>
+
+{% endfor %}
+
+
+
+
+        </div>
+      </div>
+
+
+
+		<!-- nav save tabb -->
+
+      <div class="tab-pane fade" id="nav-stikipy" role="tabpanel" aria-labelledby="nav-stikipy-tab">
+
+          <div class="widget widget--ht-lg widget--wd-lg infinite-scroll" id="pins-widget">
+	<div class="pins" id="pins-list">
+
+		<div class="pin-sizer"></div>
+
+        <div class="row">
+		  {% for object in object.stickypic_set.all %}
+
+		<a href="{{object.get_absolute_url }}"><div class="pin" id="pin-id-{{ forloop.counter }}">
+			<div class="pin-content">
+
+				<div class="pin-content__top">
+
+					<img class="pin-img" src="{{ object.image.url }}" />
+
+					<div class="overlay"></div>
+					<p class="pin-desc">{{ object.user.username }}</p>
+					<a class="pin-link" href="{{ object.source }}" target="_blank">{{ object.source }}</a>
+				</div>
+
+				<div class="pin-content__bottom">
+					<p class="pin-title">{{ object.description }}</p>
+					<p class="pin-likes">
+						<svg class="heart" viewBox="0 0 32 29.6">
+						  <path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2
+							c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/>
+						</svg> {{ object.liked.all.count }} like{{ object.liked.all.count|pluralize }}
+					</p>
+				</div>
+			</div>
+
+
+		</div>
+			</a>
+            {% empty %}
+            <p>No Stickypic Yet!!</p>
+
+
+		{% endfor %}
+        </div>
+	</div>
+</div>
+
+
+      </div>
+
+
+
+ <div class="tab-pane fade" id="nav-article" role="tabpanel" aria-labelledby="nav-article-tab">
+            <section class="blog_area p_120">
+        <div class="container">
+            <div class="row">
+          <div class="col-lg-8">
+                        <div class="blog_left_sidebar">
+
+                            {% for object in object.article_set.all  %}
+                            <article class="blog_style1">
+                            	<div class="blog_img">
+                                    {% for p in object.images_set.all %}
+                            		<img style="height:300px; width:100%;"  class="img-fluid" src="{{ p.image.url }}" alt="image not found">
+                            	    {% endfor %}
+                                </div>
+                            	<div class="blog_text">
+									<div class="blog_text_inner">
+										<a class="cat" href="#">Gadgets</a>
+										<a href="{{ object.get_absolute_url }}"><h4>{{ object.title }}</h4></a>
+										<p> {{ object.body|truncatewords:20 }}<a href="{{ object.get_absolute_url}}">Read More</a> </p>
+										<div class="date">
+											<a href="#"><i class="fa fa-calendar" aria-hidden="true"></i> {{ object.created |timesince }} ago</a>
+											<a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i> {{ object.comment_set.all.count}}</a>
+										</div>
+									</div>
+                            	</div>
+                            </article>
+                             {% endfor %}
+
+                        </div>
+                    </div>
+
+              </div>
+            </div>
+            </section>
+        </div>
+
+
+
+             <div class="tab-pane fade" id="nav-favourite" role="tabpanel" aria-labelledby="nav-favourite-tab">
+            <section class="blog_area p_120">
+        <div class="container">
+            <div class="row">
+          <div class="col-lg-8">
+                        <div class="blog_left_sidebar">
+
+                            {% for object in object.favourite.all  %}
+                            <article class="blog_style1">
+                            	<div class="blog_img">
+                                    {% for p in object.images_set.all %}
+                            		<img style="height:300px; width:100%;"  class="img-fluid" src="{{ p.image.url }}" alt="image not found">
+                            	    {% endfor %}
+                                </div>
+                            	<div class="blog_text">
+									<div class="blog_text_inner">
+										<a class="cat" href="#">Gadgets</a>
+										<a href="{{ object.get_absolute_url }}"><h4>{{ object.title }}</h4></a>
+										<p> {{ object.body|truncatewords:20 }}<a href="{{ object.get_absolute_url}}">Read More</a> </p>
+										<div class="date">
+											<a href="#"><i class="fa fa-calendar" aria-hidden="true"></i> {{ object.created |timesince }} ago</a>
+											<a href="#"><i class="fa fa-comments-o" aria-hidden="true"></i> {{ object.comment_set.all.count}}</a>
+										</div>
+									</div>
+                            	</div>
+                            </article>
+                             {% endfor %}
+
+                        </div>
+                    </div>
+
+              </div>
+            </div>
+            </section>
+        </div>
+
+
+        <!-- favourite post -->
+
+    </div>
+  </div>
+</div>
+
+    </div>
+
+
+{% block script %}
+
+
+{% endblock %}
+{% endblock %}
+

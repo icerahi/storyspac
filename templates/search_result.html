@@ -1,0 +1,360 @@
+<!-- Button trigger modal -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+{% block static %}
+<link rel="stylesheet" media="all" href="{% static 'accounts/profile.css' %}" data-turbolinks-track="reload" />
+
+        <!-- main css -->
+        <link rel="stylesheet" href="{% static 'articles/style.css' %}">
+        <link rel="stylesheet" href="{% static 'articles/responsive.css' %}">
+<style>
+
+    a{text-decoration: none;
+color:black;
+}
+</style>
+{% endblock static %}
+
+  <div class="profile-tab">
+
+  <nav>
+      <div  class="nav nav-tabs d-flex justify-content-center" id="nav-tab" role="tablist">
+		  <a class="nav-item nav-link" id="nav-stikipy-tab" data-toggle="tab" href="#nav-stikipy" role="tab" aria-controls="nav-stikipy" aria-selected="true" >Stickypic</a>
+          <a class="nav-item nav-link " id="nav-photo-tab" data-toggle="tab" href="#nav-photo" role="tab" aria-controls="nav-photo" aria-selected="true"> Photo</a>
+          <a class="nav-item nav-link" id="nav-article-tab" data-toggle="tab" href="#nav-article" role="tab" aria-controls="nav-article" aria-selected="true">Article</a>
+		  <a class="nav-item nav-link" id="nav-people-tab" data-toggle="tab" href="#nav-people" role="tab" aria-controls="nav-people" aria-selected="true">People</a>
+		  <a class="nav-item nav-link active" id="nav-all-tab" data-toggle="tab" href="#nav-all" role="tab" aria-controls="nav-all" aria-selected="true">All</a>
+
+
+
+	  </div>
+
+    </nav>
+
+    <div class="tab-content pb-3" id="nav-tabContent">
+
+		<!-- post tabber -->
+      <div class="tab-pane fade show " id="nav-photo" role="tabpanel" aria-labelledby="nav-photo-tab">
+
+
+<div class="container" style="float:right; position:relative;">
+<div class="row">
+	<!-- BEGIN SEARCH RESULT -->
+	<div class="col-md-12">
+		<div class="grid search">
+			<div class="grid-body">
+				<div class="row">
+					<!-- BEGIN FILTERS -->
+
+					<!-- END FILTERS -->
+					<!-- BEGIN RESULT -->
+					<div class="col-md-9">
+            <span> Result found Total: {{ total_photo }}</span><br>
+						<span>Showing all results matching "{{ request.GET.q }}"</span>
+
+						<div class="padding"></div>
+
+
+						<!-- BEGIN TABLE RESULT -->
+						<div class="table-responsive">
+							<table class="table table-hover">
+								<tbody>
+                                {% for object in photo_list %}
+                                <tr>
+
+
+                                    <td class="image">
+                                        <a href="{{ object.get_absolute_url }}"><img width="80" height="90" src="{{ object.image.url }}" alt="">
+                                        </a>
+                                    </td>
+
+                                     <td class="product">
+                                       <strong>{{ object.user.username }}</strong>
+                                    <br> <a href="{{ object.get_absolute_url }}"><small>{{ object.caption }}</small> </a></td>
+
+
+
+
+ 								</tr>
+								{% empty %}
+							 Sorry! No result found.
+                                {% endfor %}
+
+
+
+
+							</tbody></table>
+						</div>
+						<!-- END TABLE RESULT -->
+
+
+					</div>
+					<!-- END RESULT -->
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- END SEARCH RESULT -->
+</div>
+</div>
+
+      </div>
+
+
+
+		<!-- nav save tabb -->
+
+      <div class="tab-pane fade" id="nav-stikipy" role="tabpanel" aria-labelledby="nav-stikipy-tab">
+
+<div class="container" style="float:right; position:relative;">
+<div class="row">
+	<!-- BEGIN SEARCH RESULT -->
+	<div class="col-md-12">
+		<div class="grid search">
+			<div class="grid-body">
+				<div class="row">
+					<!-- BEGIN FILTERS -->
+
+					<!-- END FILTERS -->
+					<!-- BEGIN RESULT -->
+					<div class="col-md-9">
+                    <span> Result found Total: {{ total_sticky }}</span><br>
+						<span>Showing all results matching "{{ request.GET.q }}"</span>
+
+						<div class="padding"></div>
+
+
+						<!-- BEGIN TABLE RESULT -->
+						<div class="table-responsive">
+							<table class="table table-hover">
+								<tbody>
+                                {% for object in sticky_list %}
+                                <tr>
+
+
+                                    <td class="image">
+                                        <a href="{{ object.get_absolute_url }}"><img width="80" height="90" src="{{ object.image.url }}" alt="">
+                                        </a>
+                                    </td>
+
+                                     <td class="product">
+                                          <strong>{{ object.user.username }}</strong>
+                                    <br> <a href="{{ object.get_absolute_url }}"><small>{{ object.description }}</small> </a>
+                                    <br> <a href="{{ object.get_absolute_url }}"><small>{{ object.source }}</small> </a>
+                                     </td>
+
+
+
+
+ 								</tr>
+								{% empty %}
+								 Sorry! No result found.
+                                {% endfor %}
+
+
+
+
+							</tbody></table>
+						</div>
+						<!-- END TABLE RESULT -->
+
+
+					</div>
+					<!-- END RESULT -->
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- END SEARCH RESULT -->
+</div>
+</div>
+
+      </div>
+
+
+
+
+      <div class="tab-pane fade" id="nav-article" role="tabpanel" aria-labelledby="nav-article-tab">
+          <div class="container" style="float:right; position:relative;">
+             <span> Result found Total: {{ total_article }}</span><br>
+						<span>Showing all results matching "{{ request.GET.q }}"</span>
+              </div>
+           <section class="blog_area p_120">
+        <div class="container">
+
+                <div class="row">
+
+
+                    <div class="col-lg-8">
+
+
+                        <div class="blog_left_sidebar">
+
+                            {% for object in article_list %}
+                            <article class="blog_style1">
+
+
+                            	<div class="blog_text">
+
+									<div class="blog_text_inner">
+  <div class="round-img"><img src="{{  object.author.profile.profile_pic.url }}" alt="..." class="round-img" width="30" height="30">
+    <strong>{{ object.author.username}} </strong>
+  </div>
+										<a href="{{ object.get_absolute_url }}"><h4>{{ object.title }}</h4></a>
+										<p> {{ object.body|truncatewords:30 }}<a href="{{object.get_absolute_url}}">see more</a> </p>
+                                        <hr>
+                                        <hr>
+									</div>
+                            	</div>
+                            </article>
+                             {% endfor %}
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+           </section>
+
+	  </div>
+
+
+      <div class="tab-pane fade" id="nav-people" role="tabpanel" aria-labelledby="nav-people-tab">
+
+
+						<!-- BEGIN TABLE RESULT -->
+			<div class="container" style="float:right; position:relative;">
+                 <span> Result found Total: {{ total_people }}</span><br>
+
+						<div class="padding"></div>
+                <span>Showing all results matching "{{ request.GET.q }}"</span> <br>
+{% for object in people_list %}
+
+ <div class="project">
+     <div class="col-sm-6">
+    <div class="row bg-white has-shadow" >
+      <div class="left-col col-lg-6 d-flex align-items-center justify-content-between">
+        <div class="project-title d-flex align-items-center">
+          <div class="round-img"><img src="{{  object.user.profile.profile_pic.url }}" alt="..." class="round-img" width="30" height="30"></div>
+          <div class="text">
+
+
+                  <p class="email" style="margin-bottom:2px;"> &nbsp;&nbsp; {{  object.user.username}}</p>
+
+          </div>
+        </div>
+        <small>Follower: ({{  object.user.followed_by.all.count }})</small>
+       </div>
+        <a class="btn btn-outline-dark common-btn edit-profile-btn" href="{% url 'profile:userdetail' username=object.user.username %}">
+          see
+
+        </a>
+
+      </div>
+         </div>
+    </div>
+
+    {% empty %}
+          Sorry! No result found.
+ {% endfor %}
+	<!-- END SEARCH RESULT -->
+
+      </div>
+      </div>
+
+
+
+    <div class="tab-pane fade show active " id="nav-all" role="tabpanel" aria-labelledby="nav-all-tab">
+
+
+						<!-- BEGIN TABLE RESULT -->
+			<div class="container" style="float:right; position:relative;">
+               <span> Result found Total: {{ all_count }}</span><br>
+                <span>Showing all results matching "{{ request.GET.q }}"</span> <br>
+
+
+                 <section class="blog_area p_120">
+        <div class="container">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="blog_left_sidebar">
+
+                            {% for object in  all %}
+                            <article class="blog_style1">
+
+
+                            	<div class="blog_text">
+
+<div class="blog_text_inner">
+  <div class="round-img">
+        {% if object.user.profile.profile_pic %}
+      <img src="{{  object.user.profile.profile_pic.url }}" alt="" class="round-img" width="30" height="30">
+      {% endif %}
+      {% if object.author.profile.profile_pic %}
+      <img src="{{  object.author.profile.profile_pic.url }}" alt="..." class="round-img" width="30" height="30">
+      {% endif %}
+    <strong>{{ object.author.username}} </strong>
+      <strong>{{ object.user.username}} </strong>
+  </div>
+
+
+
+      <a href="{{ object.get_absolute_url }}">{{ object.caption}}</a>
+         <a href="{{ object.get_absolute_url }}">{{ object.description}}</a>
+    <a href="{{ object.get_absolute_url }}">{{ object.source}}</a>
+           <strong>{{ object.title}}</strong>
+    <a href="{{object.get_absolute_url }}">  {{ object.body|truncatewords:20}} </a>
+         {% if object.image %}
+
+     <a href="{{ object.get_absolute_url }}"><img style="position:relative;float:right;margin-top:-16%;" width="80" height="80" src="{{ object.image.url }}" alt="">
+  </a>
+
+       {% endif %}
+      <hr>
+    <hr>
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+                            	</div>
+
+                            </article>
+
+                              {% empty %}
+    Sorry! No result found.
+                             {% endfor %}
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+           </section>
+
+
+
+
+
+	<!-- END SEARCH RESULT -->
+
+      </div>
+
+
+
+      </div>
+
+
+
+
+{% endblock %}

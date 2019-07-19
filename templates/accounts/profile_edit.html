@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container">
+
+      <div class="row edit-profile-wrapper">
+
+  <div class="col-sm-9 right-col">
+    <form action="" enctype="multipart/form-data" method="post">
+
+    {% csrf_token %}
+
+
+      <div class="row username-img">
+        <div class="col-sm-3 text-right">
+          <img width="38" height="38" class="round-img" src="{{ request.user.profile.profile_pic.url }}" alt="{{ request.user.username}}" />
+        </div>
+        <div class="col-sm-9">
+          <p>{{ request.user.username }}</p>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-sm-3 col-form-label text-right font-weight-bold" for="username">Change Profile Picture</label>
+        <div class="col-sm-9">
+            {{ profile_form.profile_pic.errors }}
+            {{ profile_form.profile_pic }}
+         </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-sm-3 col-form-label text-right font-weight-bold" for="username">Username</label>
+        <div class="col-sm-9">
+            {{ user_form.username.errors }}
+            {{ user_form.username }}
+         </div>
+      </div>
+
+        <div class="form-group row">
+        <label class="col-sm-3 col-form-label text-right font-weight-bold" for="user_email">Fullname</label>
+        <div class="col-sm-9">
+            {{ profile_form.fullname.errors }}
+            {{ profile_form.fullname }}
+        </div>
+      </div>
+
+         <div class="form-group row">
+        <label class="col-sm-3 col-form-label text-right font-weight-bold" for="user_email">Bio</label>
+        <div class="col-sm-9">
+            {{ profile_form.bio.errors }}
+            {{ profile_form.bio }}
+        </div>
+      </div>
+          <div class="form-group row">
+        <label class="col-sm-3 col-form-label text-right font-weight-bold" for="user_email">Date of birth</label>
+        <div class="col-sm-9">
+            {{ profile_form.date_of_birth.errors }}
+            {{ profile_form.date_of_birth }}
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label class="col-sm-3 col-form-label text-right font-weight-bold" for="user_email">Email</label>
+        <div class="col-sm-9">
+            {{ user_form.email.errors }}
+            {{ user_form.email }}
+        </div>
+      </div>
+
+
+
+
+
+      <div class="form-group row">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-9">
+          <input type="submit" name="commit" value="Update" class="btn btn-primary" data-disable-with="Update" />
+        </div>
+      </div>
+</form>  </div>
+</div>
+
+</div>
+
+
+{% block script %}
+
+{% endblock script %}
+{% endblock %}

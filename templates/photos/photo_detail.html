@@ -1,0 +1,229 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block content %}
+
+{% block style %}
+ <link rel="stylesheet" href="{% static 'photos/style.css' %}">
+{% endblock style %}
+
+
+<!--
+
+<div class="container">
+    <div class="row">
+      <div col-md-8>
+          <div class="container img-container">
+        <div id="upload-div"></div>
+        <div class="img-div">
+          <div class="header">
+
+
+          <a href="#"><i>{{ object.user }}</i></a>
+            <a href=""><input type="button" value="Edit"></a>
+            <a href=""><input type="button" value="Delete"></a>
+
+       </div>
+            <img src="{{ object.image.url }}" alt="">
+              <small class="text-muted">{{ object.timestamp|timesince}}</small>
+            <br>
+  <b><i>{{ object.user }}</i></b>|{{ object.caption }}
+  </div>
+
+  </div>
+
+      </div>
+    </div>
+</div>
+
+-->
+ 
+
+
+
+<div class="container">
+<div class="row">
+
+ 
+
+    <div class="col-md-4">
+               <div class="user_area" id="sidebar">
+                    <div class="user_details">
+                        <div class="user_img">
+                            <img src="{{ object.user.profile.profile_pic.url }}" width="50" height="50" alt="">
+
+                        </div>
+                        <div class="user_name">
+                            <p class="name">
+                                <a href="{% url 'profile:userdetail' username=object.user.username %}">  {{ object.user.username }}</a>
+                            </p>
+                            <p class="id">
+                                {% if object.user == request.user %}
+                                {{ object.user.email }}
+                                {% endif %}
+                            </p>
+                        </div> <!--user_name-->                      
+                        
+                    </div> <!--user_details-->
+                    
+               </div>
+            </div> <!---col-md-4 end---->
+
+
+
+    <div class="col-md-7">
+    <div class="img-container">
+        <div id="upload-div"></div>
+        <div class="img-div">
+
+
+
+            <a href="{{ object.get_absolute_url }}"><img src="{{ object.image.url }}" alt=""></a>
+
+            <br>
+
+
+        <b><i>{{ object.user }}</i></b> {{ object.timestamp|timesince }}
+            views: {{object.views}}
+        <div class="caption_show">
+
+           {{ object.caption  }}
+
+        </div>
+
+
+<div class="icon">
+    <form action="{% url 'photos:like_post' %}" method="post">
+        {% csrf_token %}
+        {% if is_liked %}
+
+        <button type="submit"  name="object_id" value="{{ object.pk }}">
+            <img src="{% static 'img/like.png' %}" height="30" width="30" alt="">
+        </button>
+
+        {% else %}
+                <button type="submit"  name="object_id" value="{{ object.pk }}">
+            <img src="{% static 'img/unlike.png' %}" height="30" width="30" alt="">
+        </button>
+
+        {% endif %}
+
+        {{ object.liked.all.count }} like{{ object.liked.all.count|pluralize }}
+         ({% for liked_user in object.liked.all %}
+        <a href="{% url 'profile:userdetail' username=liked_user %}">{{ liked_user }}</a>
+        {% endfor %})
+    </form>
+
+    <i class="fa fa-comment-o" aria-hidden="true"></i>
+
+<!-popover start-->
+
+
+
+    <button
+            type="button"
+            role="button"
+            class="btn"
+            data-toggle="popover"
+            title="Share"
+            data-placement="top"
+    data-content=" <a href='//txt>
+    <img height='40' width='60' src='{% static 'img/facebook.jpg' %}' alt='facebook'></a>
+
+<a href='//pinterest.com/pin/create/button/?url={{ request.build_absolute_uri }}&media={{ request.build_absolute_uri }}&description={{object.description}}'>
+<img height='40' width='50' src='{% static 'img/pinterest.png' %}' alt='pinterest'></a>
+
+<a href='//twitter.com/home?status={{ request.build_absolute_uri }}'>
+<img height='40' width='50' src='{% static 'img/twitter.jpg' %}' alt='twitter'></a>
+
+ <a href='//www.linkedin.com/shareArticle?mini=true&url={{ request.build_absolute_uri }}&title=&summary=&source='>
+<img height='40' width='50' src='{% static 'img/linkedin.png' %}' alt='linkedin'></a>
+
+"
+
+        data-html="true">
+
+       <i class="fa fa-share-square-o" width='20' height='20' aria-hidden="true"></i>
+
+    </button>
+
+    {% if object.user == request.user %}
+
+    <a href="{{ object.get_update_url }}"> <input type="button" value="Edit" class="btn btn-success"></a>
+    <a href="{{ object.get_delete_url }}"><input type="button" value="Delete" class="btn btn-delete"></a>
+    {% endif %}
+
+
+
+
+
+
+  </div>
+            <form action="" method="post">
+                {% csrf_token %}
+          <div class="comment">
+             {{ comment_form.as_p }}
+              <input type="submit" value="Comment" class="btn btn-outline-success">
+        </div>
+                </form>
+
+{{ comments.count }} Comments {{ comments.count|pluralize }}
+
+
+        <div class="comment_show">
+            {% for comment in comments %}
+
+            <div class="user_img">
+                <img src="{{ comment.user.profile.profile_pic.url }}" class="img-fluid" alt="Responsive image">
+            </div>
+            <div class="user_name">
+                <a href="{% url 'profile:userdetail' username=comment.user.username %}">{{ comment.user.username }}</a>
+
+            </div>
+            <div class="h_comment">
+                <p>{{ comment.comment }}</p>
+            </div>
+
+            {% empty %}
+
+            no comment yet
+            {% endfor %}
+
+
+
+
+
+
+            </div>
+
+
+  </div>
+
+  </div>
+  </div> <!----col-md-8 end---->
+
+
+
+
+</div>
+</div>
+
+
+{% include 'popup_form.html' %}
+{% block script %}
+<script>
+    $(function () {
+  $('[data-toggle="popover"]').popover({
+    container: 'body'
+  })
+})
+
+</script>
+
+
+{% endblock script%}
+{% endblock %}
+
+
+

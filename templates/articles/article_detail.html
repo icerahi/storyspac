@@ -1,0 +1,341 @@
+
+ {% extends 'base.html' %}
+ {% load static %}
+
+
+{% block content %}
+
+ {% block static %}
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="icon" href="img/favicon.png" type="image/png">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="{% static 'articles/bootstrap.css' %}">
+
+        <!-- main css -->
+        <link rel="stylesheet" href="{% static 'articles/style.css' %}">
+        <link rel="stylesheet" href="{% static 'articles/responsive.css' %}">
+
+{% endblock %}
+{% include 'popup_form.html' %}
+        <!--================Blog Area =================-->
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8">
+       					<div class="main_blog_details">
+                             {% for p in object.images_set.all %}
+       						<img class="img-fluid" src="{{ p.image.url }}" alt=" image not found">
+                            {% endfor %}
+
+
+       						<a href="{{ object.get_absolute_url }}"><h4>{{ object.title }}</h4></a>
+                             {% if object.user == request.user %}
+                  <a href="{{ object.get_edit_url }}"> <button type="button" class="btn btn-success">Edit</button></a>
+                     <button id="delete" type="button" data-toggle="modal" data-target="#delete" class="btn btn-Danger">Delete</button>
+                                        {% endif %}
+
+                            <div class="user_details">
+       							<div class="float-left">
+       								<a href="#">Lifestyle</a>
+       								<a href="#">Gadget</a>
+       							</div>
+       							<div class="float-right">
+                                    {% if is_favourite %}
+                                    Remove from Favourite List
+                                <a title="Remove from Favourite List"   href="{% url 'article:favourite' id=object.id %}"><img src="{% static 'img/favourite.svg' %}" height="50" width="50"></a>
+                                    {% else %}
+                                     Add to Favourite List
+                         <a title="Add to Favourite List"   href="{% url 'article:favourite' id=object.id %}"><img src="{% static 'img/unfavourite.svg' %}" height="50" width="50"></a>
+
+                                    {% endif %}
+       								<div class="media">
+       									<div class="media-body">
+                                            <a href="{% url 'profile:userdetail' username=object.user.username %}">	<h5>{{ object.user.username }}</h5></a>
+       										<p>{{ object.created }}</p>
+       									</div>
+
+       									<div class="d-flex">
+
+       										<img class="author_img rounded-circle" height="50" width="50" src="{{ object.user.profile.profile_pic.url }}" alt="">
+       									</div>
+       								</div>
+       							</div>
+       						</div>
+                            <p>{{ object.body | safe }}</p>
+ 							<blockquote class="blockquote">
+								<p class="mb-0">MCSE boot camps have its supporters and its detractors. Some people do not understand why you should have to spend money on boot camp when you can get the MCSE study materials yourself at a fraction of the camp price. However, who has the willpower to actually sit through a self-imposed MCSE training.</p>
+							</blockquote>
+
+      						<div class="news_d_footer">
+
+                    <form action="{% url 'article:like_post' %}" method="post">
+                        {% csrf_token %}
+                        {% if is_liked %}
+
+                        <button type="submit"  name="object_id" value="{{ object.pk }}">
+                            <img src="{% static 'img/like.png' %}" height="30" width="30" alt="">
+                        </button>
+
+                        {% else %}
+                                <button type="submit"  name="object_id" value="{{ object.pk }}">
+                            <img src="{% static 'img/unlike.png' %}" height="30" width="30" alt="">
+                        </button>
+
+                        {% endif %}
+
+                        {{ object.liked.all.count }} like{{ object.liked.all.count|pluralize }}
+                         ({% for liked_user in object.liked.all %}
+                        <a href="{% url 'profile:userdetail' username=liked_user %}">{{ liked_user }}</a>
+                        {% endfor %})
+                    </form>
+
+
+
+                         <a class="justify-content-center ml-auto" href="#"><i class="lnr lnr lnr-bubble"></i>{{comments.count}} Comment{{comments|pluralize}}</a>
+      							<div class="news_socail ml-auto">
+									<a href="#"><i class="fa fa-facebook"></i></a>
+									<a href="#"><i class="fa fa-twitter"></i></a>
+									<a href="#"><i class="fa fa-youtube-play"></i></a>
+									<a href="#"><i class="fa fa-pinterest"></i></a>
+									<a href="#"><i class="fa fa-rss"></i></a>
+								</div>
+      						</div>
+       					</div>
+
+       					<div class="navigation-area">
+                             {% if not object.comment_disable %}
+                            <div class="comment-form">
+
+                            <form method="post" action="" enctype="multipart/form-data">
+                                    {% csrf_token %}
+
+                                <div class="form-group">
+                                    {{ form.as_p }}
+                                </div>
+                                <button type="submit" class="primary-btn submit_btn">Comment</button>
+                            </form>
+                        </div>
+                        </div>
+
+
+                        <div class="comments-area">
+
+                            {% for object in comments %}
+                             <div class="comment-list">
+                                <div class="single-comment justify-content-between d-flex">
+                                    <div class="user justify-content-between d-flex">
+                                        <div class="thumb">
+                                            <img width="35" height="35" src="{{ object.user.profile.profile_pic.url }}" alt="{{ object.user.username }}">
+                                        </div>
+                                        <div class="desc">
+                                            <h5><a href="{% url 'profile:userdetail' username=object.user.username %}">
+                                                {{ object.user.username}}</a></h5>
+
+                                            <p class="date">{{ object.timestamp }} ({{ object.timestamp|timesince}} ago)</p>
+
+                                            <p class="comment">
+                                                 {{ object.comment }}
+                                            </p>
+                                        </div>
+                                    </div>
+
+
+                       <div class="reply-btn">
+                           <div class="comment-form">
+
+                            <form method="post" action="" enctype="multipart/form-data">
+                                    {% csrf_token %}
+
+                                <div class="form-group">
+                                    <input type="hidden" name="object_id" value="{{ object.id }}">
+                                    {{ form.as_p }}
+                                </div>
+                                <button type="submit" class="primary-btn submit_btn">Reply</button>
+                            </form>
+                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        {% for reply in object.replies.all %}
+                            <div class="comment-list left-padding">
+
+                                <div class="single-comment justify-content-between d-flex">
+                                    <div class="user justify-content-between d-flex">
+                                        <div class="thumb">
+                                            <img height="30" width="30" src="{{ reply.user.profile.profile_pic.url }}" alt="">
+                                        </div>
+                                        <div class="desc">
+                                            <h5><a href="{% url 'profile:userdetail' username=reply.user.username%}">
+                                                {{ reply.user.username }}</a></h5>
+                                            <p class="date">{{ reply.timestamp}} ({{reply.timestamp|timesince}}) </p>
+                                            <p class="comment">
+                                                {{ reply.comment }}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            {% endfor %}
+
+
+                        {% endfor %}
+
+                    {% else %}
+                           <p style="text-align:center;">Comment are disabled</p>
+
+                            {% endif %}
+
+
+                            </div>
+
+
+        			</div>
+
+
+
+
+                    <div class="col-lg-4">
+                        <div class="blog_right_sidebar">
+                            <aside class="single_sidebar_widget search_widget">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Search Posts">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default" type="button"><i class="lnr lnr-magnifier"></i></button>
+                                    </span>
+                                </div><!-- /input-group -->
+                                <div class="br"></div>
+                            </aside>
+                            <aside class="single_sidebar_widget author_widget">
+
+                                <img height="100" width="100" class="author_img rounded-circle" src="{{ object.user.profile.profile_pic.url }}" alt="">
+
+                                <h4>{{ object.user.username }}</h4>
+                                <p>Senior blog writer</p>
+                                <div class="social_icon">
+                                    <a href="#"><i class="fa fa-facebook"></i></a>
+                                    <a href="#"><i class="fa fa-twitter"></i></a>
+                                    <a href="#"><i class="fa fa-github"></i></a>
+                                    <a href="#"><i class="fa fa-behance"></i></a>
+                                </div>
+                                <p>Boot camps have its supporters andit sdetractors. Some people do not understand why you should have to spend money on boot camp when you can get. Boot camps have itssuppor ters andits detractors.</p>
+                                <div class="br"></div>
+                            </aside>
+                            <aside class="single_sidebar_widget popular_post_widget">
+                                <h3 class="widget_title">Popular Posts</h3>
+                                <div class="media post_item">
+                                    <img src="img/blog/popular-post/post1.jpg" alt="post">
+                                    <div class="media-body">
+                                        <a href="blog-details.html"><h3>Space The Final Frontier</h3></a>
+                                        <p>02 Hours ago</p>
+                                    </div>
+                                </div>
+                                <div class="media post_item">
+                                    <img src="img/blog/popular-post/post2.jpg" alt="post">
+                                    <div class="media-body">
+                                        <a href="blog-details.html"><h3>The Amazing Hubble</h3></a>
+                                        <p>02 Hours ago</p>
+                                    </div>
+                                </div>
+                                <div class="media post_item">
+                                    <img src="img/blog/popular-post/post3.jpg" alt="post">
+                                    <div class="media-body">
+                                        <a href="blog-details.html"><h3>Astronomy Or Astrology</h3></a>
+                                        <p>03 Hours ago</p>
+                                    </div>
+                                </div>
+                                <div class="media post_item">
+                                    <img src="img/blog/popular-post/post4.jpg" alt="post">
+                                    <div class="media-body">
+                                        <a href="blog-details.html"><h3>Asteroids telescope</h3></a>
+                                        <p>01 Hours ago</p>
+                                    </div>
+                                </div>
+                                <div class="br"></div>
+                            </aside>
+                            <aside class="single_sidebar_widget">
+                                <a href="#"><img class="img-fluid" src="img/blog/add.jpg" alt=""></a>
+                                <div class="br"></div>
+                            </aside>
+                            <aside class="single_sidebar_widget post_category_widget">
+                                <h4 class="widget_title">Post Catgories</h4>
+                                <ul class="list cat-list">
+                                    <li>
+                                        <a href="#" class="d-flex justify-content-between">
+                                            <p>Technology</p>
+                                            <p>37</p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="d-flex justify-content-between">
+                                            <p>Lifestyle</p>
+                                            <p>24</p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="d-flex justify-content-between">
+                                            <p>Fashion</p>
+                                            <p>59</p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="d-flex justify-content-between">
+                                            <p>Art</p>
+                                            <p>29</p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="d-flex justify-content-between">
+                                            <p>Food</p>
+                                            <p>15</p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="d-flex justify-content-between">
+                                            <p>Architecture</p>
+                                            <p>09</p>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="d-flex justify-content-between">
+                                            <p>Adventure</p>
+                                            <p>44</p>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <div class="br"></div>
+                            </aside>
+                            <aside class="single-sidebar-widget tag_cloud_widget">
+                                <h4 class="widget_title">Tag Clouds</h4>
+                                <ul class="list">
+                                    <li><a href="#">Technology</a></li>
+                                    <li><a href="#">Fashion</a></li>
+                                    <li><a href="#">Architecture</a></li>
+                                    <li><a href="#">Fashion</a></li>
+                                    <li><a href="#">Food</a></li>
+                                    <li><a href="#">Technology</a></li>
+                                    <li><a href="#">Lifestyle</a></li>
+                                    <li><a href="#">Art</a></li>
+                                    <li><a href="#">Adventure</a></li>
+                                    <li><a href="#">Food</a></li>
+                                    <li><a href="#">Lifestyle</a></li>
+                                    <li><a href="#">Adventure</a></li>
+                                </ul>
+                            </aside>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <!--================Blog Area =================-->
+
+
+ {% block script %}
+
+ {% endblock script %}
+ {% endblock content %}

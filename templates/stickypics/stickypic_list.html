@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{% block style %}
+	<link rel="stylesheet" type="text/css" href="{% static 'stikipy/css/pins.css' %}" />
+
+ {% endblock %}
+{% include 'popup_form.html' %}
+
+
+<div class="widget widget--ht-lg widget--wd-lg infinite-scroll" id="pins-widget">
+	<div class="pins" id="pins-list">
+		<div class="pin-sizer"></div>
+		{% for object in object_list %}
+		<a href="{{object.get_absolute_url }}"><div class="pin" id="pin-id-{{ forloop.counter }}">
+			<div class="pin-content">
+
+				<div class="pin-content__top">
+
+					<img class="pin-img" src="{{ object.image.url }}" />
+
+					<div class="overlay"></div>
+					<p class="pin-desc">{{ object.user.username }}</p>
+					<a class="pin-link" href="{{ object.source }}" target="_blank">{{ object.source }}</a>
+				</div>
+
+				<div class="pin-content__bottom">
+					<p class="pin-title">{{ object.description }}</p>
+					<p class="pin-likes">
+						<svg class="heart" viewBox="0 0 32 29.6">
+						  <path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2
+							c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/>
+						</svg> {{ object.liked.all.count }} like{{ object.liked.all.count|pluralize }}
+					</p>
+				</div>
+			</div>
+		</div>
+			</a>
+		{% endfor %}
+	</div>
+</div>
+
+{% block script %}
+
+<!-- jQuery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+	<!-- Bootstrap compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<!-- Vendor scripts -->
+	<script src="https://unpkg.com/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+	<script src="https://unpkg.com/packery@2/dist/packery.pkgd.min.js"></script>
+	<script src="https://unpkg.com/draggabilly@2/dist/draggabilly.pkgd.min.js"></script>
+	<script src="https://unpkg.com/masonry-layout@4.2.0/dist/masonry.pkgd.min.js"></script>
+	<script src="https://unpkg.com/interactjs@1.3.0/dist/interact.min.js"></script>
+	<!-- Custom scripts -->
+	<script src="{% static 'stikipy/js/drag-and-drop.js' %}"></script>
+	<script src="{% static 'stikipy/js/infinite-scroll.js' %}"></script>
+	<script src="{% static 'stikipy/js/index.js' %}"></script>
+{% endblock %}
+{% endblock %}

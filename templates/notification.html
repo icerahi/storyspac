@@ -1,0 +1,85 @@
+<!-- Button trigger modal -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+{% block static %}
+<link rel="stylesheet" media="all" href="{% static 'accounts/profile.css' %}" data-turbolinks-track="reload" />
+
+        <!-- main css -->
+        <link rel="stylesheet" href="{% static 'articles/style.css' %}">
+        <link rel="stylesheet" href="{% static 'articles/responsive.css' %}">
+<style>
+
+    a{text-decoration: none;
+color:black;
+}
+</style>
+{% endblock static %}
+
+<center>
+  <h4>Notifications</h4>
+</center>
+{% if object_list %}
+  <div class="content">
+  {% for notification in object_list reversed %}
+
+    {% if notification.comment %}
+      {% if notification.comment.photo.user == user %}
+        <div class="media-body">
+          <div class="article-metadata">
+            <img class='rounded-circle article-img crop'src="{{ notification.comment.user.profile.profile_pic.url }}" height="50" width="50">
+
+            <a class="black-link" href="{% url 'profile:userdetail' notification.comment.user.username %}">{{ notification.comment.user }}</a>
+            commented at {{ notification.comment.timestamp|timesince }} ago:
+            <p class="ml-5">
+              "{{ notification.comment.comment }}"
+              on your
+              <a class="black-link" href="{{ notification.photo.get_absolute_url }}">Photo.</a>
+            </p>
+            </br>
+          </div>
+        </div>
+      {% endif %}
+    {% elif notification.liked %}
+      {% if notification.role_user != user %}
+        {% if notification.photo.user == user %}
+          <div class="media-body">
+            <div class="article-metadata">
+              <img class='rounded-circle article-img crop'src="{{ notification.role_user.profile.profile_pic.url }}" height="50" width="50">
+              <a class="black-link" href="{% url 'profile:userdetail' notification.role_user.username %}">{{ notification.role_user }}</a>
+              liked your
+              <a class="black-link" href="{{notification.photo.get_absolute_url}}">Photo.</a> {{notification.timestamp|timesince}} ago
+              </br>
+              </br>
+              </br>
+            </div>
+          </div>
+        {% endif %}
+      {% endif %}
+    {% elif notification.followed %}
+      {% if notification.role_user != user %}
+        {% if notification.profile.user == user %}
+          <div class="media-body">
+            <div class="article-metadata">
+              <img class='rounded-circle article-img crop'src="{{ notification.role_user.profile.profile_pic.url }}" height="50" width="50">
+              <a class="black-link" href="{% url 'profile:userdetail' notification.role_user.username %}">{{ notification.role_user }}</a>
+              started following you.{{notification.timestamp|timesince}} ago.
+              </br>
+              </br>
+              </br>
+            </div>
+          </div>
+        {% endif %}
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+  </div>
+{% else %}
+  <center>
+    You don't have any notifications yet.
+  </center>
+{% endif %}
+
+
+{% endblock %}

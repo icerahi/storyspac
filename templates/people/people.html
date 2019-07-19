@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{% block style %}
+    <link rel="stylesheet" media="all" href="{% static 'accounts/profile.css' %}" data-turbolinks-track="reload" />
+{% endblock %}
+
+
+
+<div class="container">
+{% for user in recommended %}
+
+ <div class="project">
+     <div class="col-sm-6">
+    <div class="row bg-white has-shadow" >
+      <div class="left-col col-lg-6 d-flex align-items-center justify-content-between">
+        <div class="project-title d-flex align-items-center">
+          <div class="round-img"><img src="{{ user.user.profile.profile_pic.url }}" alt="..." class="round-img" width="30" height="30"></div>
+          <div class="text">
+              <a href="{% url 'profile:userdetail' username=user.user.username %}">
+
+                  <p class="email" style="margin-bottom:2px;"> &nbsp;&nbsp; {{ user.user.username}}</p>
+                  </a>
+          </div>
+        </div>
+        <small>Follower: ({{ user.user.followed_by.all.count }})</small>
+       </div>
+        <a class="btn btn-outline-dark common-btn edit-profile-btn" href="{% url 'profile:userdetail' username=user.user.username %}">
+          see
+
+        </a>
+
+      </div>
+         </div>
+    </div>
+
+    {% empty %}
+          Not user yet
+
+ {% endfor %}
+
+{% endblock %}
+
+    </div>
