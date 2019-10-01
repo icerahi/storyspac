@@ -29,7 +29,6 @@ urlpatterns = [
     path('article/', include(('articles.urls', 'articles'), namespace='article')),
 
     #api
-    path('api/',include(('api.urls','api'),namespace='api')),
     path('^api-auth/', include('rest_framework.urls')),
     #search
     path('search/',SearchView.as_view(),name='search'),
@@ -40,17 +39,16 @@ urlpatterns = [
     #password _set
     # path('/accounts/password/change/',allauth.account.views.PasswordChangeView.as_view(),name="account_change_password"),
 
-
-
-
-
     path('change_password/',auth_views.PasswordChangeView.as_view(form_class=PasswordChangeForm,template_name='registration/password_change.html'),name='change_password'),
     path('change_password/done/',auth_views.PasswordChangeDoneView.as_view( template_name='registration/password_change_done.html'),name='change_password_done'),
     # password_reset
     path('activate/<uidb64>/<token>/',activate,name='activate'),
     path('reset_password_confirm/<uidb64>/<token>/',PasswordResetConfirmView.as_view(),name='reset_password_confirm'),
-    path('reset_password/',ResetPasswordRequestView.as_view(),name='reset_password')
+    path('reset_password/',ResetPasswordRequestView.as_view(),name='reset_password'),
 
+
+    #All api url
+    path('api/articles/',include(('articles.api.urls','articles.api'),namespace='articles-api')), #articles api
 ]
 
 

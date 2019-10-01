@@ -1,5 +1,4 @@
-import django_heroku
-
+ 
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -27,25 +26,25 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'whitenoise.runserver_nostatic',
+
 
     #my app
     'articles',
     'stickypics',
     'photos',
     'accounts',
-    'api',
+
 
     'emoji_picker',
-    'pagedown',
+
     'rest_framework',
-    'corsheaders',
+
 
 # social_authentication
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'allauth.socialaccount.providers.facebook',
+ 
     'allauth.socialaccount.providers.google',
     'django.contrib.sites',
 ]
@@ -62,8 +61,8 @@ AUTHENTICATION_BACKENDS=(
 ACCOUNT_EMAIL_REQUIRED=True
 
 MIDDLEWARE = [
-    #corsheader_middleware
-    'corsheaders.middleware.CorsMiddleware',
+
+
     'django.middleware.common.CommonMiddleware',
 
     'django.middleware.security.SecurityMiddleware',
@@ -169,15 +168,8 @@ EMAIL_HOST_PASSWORD = 'rahiriya'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 
-REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
-}
 
 
-CORS_ORIGIN_WHITELIST = ['http://localhost:3000'] #react
-## activate django heroku
-django_heroku.settings(locals())
+
+
+ 

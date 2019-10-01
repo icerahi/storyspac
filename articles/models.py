@@ -36,6 +36,8 @@ class Article(models.Model):
     favourite=models.ManyToManyField(settings.AUTH_USER_MODEL,blank=True,related_name='favourite')
     def __str__(self):
         return self.title
+    class Meta:
+        ordering=['-created']
 
     def get_absolute_url(self):
         return reverse('article:detail', kwargs={'pk':self.id,'slug':self.slug})

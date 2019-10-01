@@ -3,7 +3,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm,PasswordChangeForm
 from django.contrib.auth.models import User
 from django.forms import ModelForm
-from betterforms.multiform import MultiModelForm
+
 from accounts.models import UserProfile
 
 from allauth.account.views import LoginForm
