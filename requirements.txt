@@ -4,7 +4,7 @@ chardet==3.0.4
 defusedxml==0.6.0
 dj-places==3.1.0
 dj-static==0.0.6
-Django==2.2.3
+Django==2.2.4
 django-address==0.2.1
 django-allauth==0.39.1
 django-ckeditor==5.7.1
