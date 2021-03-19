@@ -15,7 +15,7 @@ django-js-asset==1.2.2
 django-money==0.15
 django-phonenumber-field==3.0.1
 django-phonenumbers==1.0.1
-djangorestframework==3.10.2
+djangorestframework==3.11.2
 geographiclib==1.49
 geopy==1.20.0
 idna==2.8
