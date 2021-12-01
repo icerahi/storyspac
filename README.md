@@ -2,7 +2,7 @@
 
 Technology: Python,Django,JavaScript,Bootstrap,Postgresql
 
-It's Social Media Web application that contains the feature of Instagram,Pinterest & Mediam.
+It's a Social Media Web application that contains the feature of Instagram, Pinterest & Medium.
 
 Features:
 - Login/Register/Create/and Update Profile
