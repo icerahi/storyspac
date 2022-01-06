@@ -16,4 +16,4 @@ Features:
       - Implement notification system based on user interection etc
 
 live at:
-http://storyspac.pythonanywhere.com (username:rahi ,password rahi)
+http://storyspac.pythonanywhere.com (username:rahi ,password: rahi)
