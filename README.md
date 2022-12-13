@@ -1,4 +1,4 @@
-# FAME_the_project
+# Storyspac
 
 Technology: Python,Django,JavaScript,Bootstrap,Postgresql
 
